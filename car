@@ -1,0 +1,55 @@
+import abc
+
+class Car(abc.ABC):
+    def __init__(self, model, engine_volume, fuel_consumption):
+        self.model = model
+        self.engine_volume = engine_volume
+        self.fuel_consumption = fuel_consumption
+
+    @abc.abstractmethod
+    def fuel_usage(self, distance):
+        pass
+
+
+class CarBuilder:
+    def __init__(self):
+        self.model = None
+        self.engine_volume = None
+        self.fuel_consumption = None
+
+    def set_model(self, model):
+        self.model = model
+
+    def set_engine_volume(self, engine_volume):
+        self.engine_volume = engine_volume
+
+    def set_fuel_consumption(self, fuel_consumption):
+        self.fuel_consumption = fuel_consumption
+
+    def build(self):
+        car = GasolineCar(self.model, self.engine_volume, self.fuel_consumption)
+        return car
+
+
+class GasolineCar(Car):
+    def __init__(self, model, engine_volume, fuel_consumption):
+        super().__init__(model, engine_volume, fuel_consumption)
+
+    def fuel_usage(self, distance):
+        fuel_usage = (self.fuel_consumption / 100) * distance
+        return fuel_usage
+
+
+if __name__ == "__main__":
+    car_builder = CarBuilder()
+    model = input("Введіть модель автомобіля: ")
+    engine_volume = float(input("Введіть об'єм двигуна (л): "))
+    fuel_consumption = float(input("Введіть витрати палива на 100 км (л/100км): "))
+    car_builder.set_model(model)
+    car_builder.set_engine_volume(engine_volume)
+    car_builder.set_fuel_consumption(fuel_consumption)
+    car = car_builder.build()
+
+    distance = float(input("Введіть пробіг автомобіля (км): "))
+    fuel_usage = car.fuel_usage(distance)
+    print(f"Витрати палива для {distance} км в {car.model}: {fuel_usage:.2f} л")
